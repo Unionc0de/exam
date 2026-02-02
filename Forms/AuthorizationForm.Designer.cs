@@ -30,10 +30,12 @@
         {
             userNameTextBox = new TextBox();
             passwordTextBox = new TextBox();
-            button = new Button();
+            regBtn = new Button();
             label1 = new Label();
             label2 = new Label();
             exitBtn = new Button();
+            authBtn = new Button();
+            guestBtn = new Button();
             SuspendLayout();
             // 
             // userNameTextBox
@@ -50,15 +52,15 @@
             passwordTextBox.Size = new Size(273, 23);
             passwordTextBox.TabIndex = 1;
             // 
-            // button
+            // regBtn
             // 
-            button.Location = new Point(341, 331);
-            button.Name = "button";
-            button.Size = new Size(114, 49);
-            button.TabIndex = 2;
-            button.Text = "OK";
-            button.UseVisualStyleBackColor = true;
-            button.Click += button_Click;
+            regBtn.Location = new Point(257, 324);
+            regBtn.Name = "regBtn";
+            regBtn.Size = new Size(114, 49);
+            regBtn.TabIndex = 2;
+            regBtn.Text = "Sign up";
+            regBtn.UseVisualStyleBackColor = true;
+            regBtn.Click += button_Click;
             // 
             // label1
             // 
@@ -92,15 +94,37 @@
             exitBtn.UseVisualStyleBackColor = false;
             exitBtn.Click += exitBtn_Click;
             // 
+            // authBtn
+            // 
+            authBtn.Location = new Point(416, 324);
+            authBtn.Name = "authBtn";
+            authBtn.Size = new Size(114, 49);
+            authBtn.TabIndex = 6;
+            authBtn.Text = "Log in";
+            authBtn.UseVisualStyleBackColor = true;
+            authBtn.Click += authBtn_Click;
+            // 
+            // guestBtn
+            // 
+            guestBtn.BackColor = SystemColors.Control;
+            guestBtn.Location = new Point(257, 262);
+            guestBtn.Name = "guestBtn";
+            guestBtn.Size = new Size(273, 23);
+            guestBtn.TabIndex = 7;
+            guestBtn.Text = "Continue like guest";
+            guestBtn.UseVisualStyleBackColor = false;
+            // 
             // AuthorizationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(guestBtn);
+            Controls.Add(authBtn);
             Controls.Add(exitBtn);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(button);
+            Controls.Add(regBtn);
             Controls.Add(passwordTextBox);
             Controls.Add(userNameTextBox);
             Name = "AuthorizationForm";
@@ -113,9 +137,11 @@
 
         private TextBox userNameTextBox;
         private TextBox passwordTextBox;
-        private Button button;
+        private Button regBtn;
         private Label label1;
         private Label label2;
         private Button exitBtn;
+        private Button authBtn;
+        private Button guestBtn;
     }
 }

@@ -7,8 +7,17 @@ namespace exam.Models
 {
     public class User
     {
-        public User(string userName, string password,RoleType role)
+        public User(Guid id,string userName, string password,RoleType role)
         {
+            ID = id;
+            UserName = userName;
+            Password = password;
+            Role = role;
+        }
+
+        public User(string userName, string password, RoleType role)
+        {
+            ID = Guid.NewGuid();
             UserName = userName;
             Password = password;
             Role = role;
@@ -20,7 +29,6 @@ namespace exam.Models
         public enum RoleType
         {
             User,
-            Manager,
             Admin,
         }
         public RoleType Role { get; set; }

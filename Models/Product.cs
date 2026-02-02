@@ -6,6 +6,15 @@ namespace exam.Models
 {
     public class Product
     {
+        public Product(Guid id,string name, string description, string category, float price)
+        {
+            ID = id;
+            Name = name;
+            Description = description;
+            Category = category;
+            Price = price;
+        }
+
         public Product(string name, string description, string category, float price)
         {
             ID = Guid.NewGuid();
