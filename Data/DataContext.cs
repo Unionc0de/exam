@@ -21,6 +21,7 @@ namespace exam.Data
         {
             public List<Product> Products { get; set; }
             public List<User> Users { get; set; }
+            public List<Order> Orders { get; set; }
             
             private string connectionString;
             SqlConnection connection;
@@ -29,6 +30,7 @@ namespace exam.Data
             {
                 Products = new List<Product>();
                 Users = new List<User>();
+                Orders = new List<Order>();
                 connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Пользователь\\Desktop\\C#\\exam\\Database\\Database.mdf;Integrated Security=True";
             }
 
@@ -58,11 +60,37 @@ namespace exam.Data
                     MessageBox.Show(ex.Message);
                 }
             }
+
+            //Поиск пользователя по ID
+            public User searchUserById(string id)
+            {
+                for(int i = 0; i < Users.Count; i++)
+                {
+                    if (Users[i].ID == Guid.Parse(id))
+                    {
+                        return Users[i];
+                    }
+                }
+                return null;
+            }
+
+            //Поиск продукта по ID
+            public Product searchProductById(string id)
+            {
+                for (int i = 0; i < Products.Count; i++)
+                {
+                    if (Products[i].ID == Guid.Parse(id))
+                    {
+                        return Products[i];
+                    }
+                }
+                return null;
+            }
             //Получение пользователей из БД
             public async Task readUserDB()
             {
                 using (SqlConnection connection = new SqlConnection(connectionString) ) {
-                    connection.OpenAsync();
+                    await connection.OpenAsync();
                     SqlCommand cmd = connection.CreateCommand();
                     cmd.CommandText = "SELECT * FROM Users";
                     cmd.Connection = connection;
@@ -119,9 +147,9 @@ namespace exam.Data
                                 String category = reader.GetString(3);
                                 float price = reader.GetFloat(4);
 
-                                Product product = new Product(id,name,description,category,price);
+                                Product product = new Product(id, name, description, category, price);
                                 Products.Add(product);
-                            }
+                            } 
                         }
                     }
 
@@ -141,6 +169,46 @@ namespace exam.Data
                 }
             }
 
+            //Получение заказов из БД
+            public async Task readOrderDb()
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM Orders";
+                    cmd.Connection = connection;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Guid id = Guid.Parse(reader.GetString(0));
+                                User user = searchUserById(reader.GetString(1));
+                                Product product = searchProductById(reader.GetString(2));
+
+                                Order newOrder = new Order(id, user, product);
+                                Orders.Add(newOrder);
+                            }
+                        }
+                    }
+
+                }
+            }
+            //Добавление заказа в бд
+            public async Task addOrderDb(Order order)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.Connection = connection;
+                    cmd.CommandText = $"INSERT INTO Orders(Id,UserId,ProductId) VALUES('{order.Id.ToString()}','{order.User.ID.ToString()}','{order.Product.ID.ToString()}')";
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
         }
     }
 

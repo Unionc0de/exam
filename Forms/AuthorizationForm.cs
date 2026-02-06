@@ -13,11 +13,20 @@ namespace exam.Forms
     public partial class AuthorizationForm : Form
     {
         private DataContext context;
+        private User user;
 
         public AuthorizationForm()
         {
             InitializeComponent();
             context = new DataContext();
+            //Изначально создаем админа и менеджера
+            context.Users.Add(new User("Admin", "Admin", User.RoleType.Admin));
+            context.Users.Add(new User("Manager", "Manager", User.RoleType.Manager));
+            //Добавление пользователей из базы данных в массив users
+        }
+        private async void AuthorizationForm_Load(object sender, EventArgs e)
+        {
+            await context.readUserDB();
         }
 
         private void exitBtn_Click(object sender, EventArgs e)
@@ -28,14 +37,15 @@ namespace exam.Forms
         //Логика регистрации
         private async void button_Click(object sender, EventArgs e)
         {
+            
             string userName = userNameTextBox.Text;
             string password = passwordTextBox.Text;
-            if (userName == "" || password == "") 
+            if (userName == "" || password == "")
             {
                 MessageBox.Show("Username or password can`t be empty!");
                 return;
             }
-            
+
             User.RoleType role = User.RoleType.User;
             //Проверка на существование такого пользователя
             bool flag = false;
@@ -51,10 +61,11 @@ namespace exam.Forms
             {
                 //Создание пользователя и отправка в бд
                 User newUser = new User(userName, password, role);
+                user = newUser;
                 context.Users.Add(newUser);
                 await context.addUserDb(newUser);
                 //открытие главного экрана
-                MainForm frm = new MainForm();
+                MainForm frm = new MainForm(user,context);
                 frm.Show();
                 this.Hide();
             }
@@ -80,13 +91,16 @@ namespace exam.Forms
                 if (context.Users[i].UserName == userName && context.Users[i].Password == password)
                 {
                     flag = true;
+                    user = context.Users[i];
                     break;
                 }
             }
-            //Доделять
-            if (!flag)
+            if (flag)
             {
-
+                MessageBox.Show("Successfully login!");
+                MainForm frm = new MainForm(user,context);
+                frm.Show();
+                this.Hide();
             }
             else
             {
@@ -94,5 +108,6 @@ namespace exam.Forms
                 return;
             }
         }
+
     }
 }

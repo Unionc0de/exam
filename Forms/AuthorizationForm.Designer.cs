@@ -129,6 +129,7 @@
             Controls.Add(userNameTextBox);
             Name = "AuthorizationForm";
             Text = "AuthorizationForm";
+            Load += AuthorizationForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

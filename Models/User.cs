@@ -29,6 +29,7 @@ namespace exam.Models
         public enum RoleType
         {
             User,
+            Manager,
             Admin,
         }
         public RoleType Role { get; set; }
